@@ -11,9 +11,11 @@ public class App {
 	private Scanner sc = new Scanner(System.in);
 
 	private String tmz;
+	public static String defaultTMZ = "US/Mountain"; 
 	private String[] tmzs = {"US/Pacific","US/Mountain","US/Central","US/Eastern"};
 	
 	private String unit;
+	public static String defaultUnit = "mi";
 	private String[] units = {"mi","km"};
 	
 //	private String mode = "TXT";
@@ -347,23 +349,30 @@ public class App {
 //			start();
 //		}
 		viewRuns(true);
-		int input;
+
 		boolean unknown;
 		do {
 			unknown = false;
 			try {
-				System.out.println("Enter the index of the run you want to delete.");
-				input = sc.nextInt();
-				if (input - 1 < runs.size()) {
-					Run r = runs.get(input - 1);
-					Serializer.remove(r);
+				System.out.println("Enter the index of the run you want to delete (or enter 'all' to remove all runs).");
+				if (sc.hasNextInt()) {
+					int input = sc.nextInt();
+					if (input - 1 < runs.size()) {
+						Run r = runs.get(input - 1);
+						Serializer.remove(r);
+					}else {
+						throw new Exception();
+					}
+				}else if (sc.hasNext("all")) {
+					sc.nextLine();
+					Serializer.removeAll();
 				}else {
 					throw new Exception();
 				}
+				
 			}catch(Exception e) {
 				System.out.println("Invalid index. Please try again.");
 				unknown = true;
-			}finally {
 				sc.nextLine();
 			}
 			

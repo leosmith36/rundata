@@ -2,6 +2,7 @@ package app;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,10 +73,15 @@ public class Serializer {
 	public static void removeAll() {
 		File storage = new File(Paths.get("storage").toString());
 		String[] list = storage.list();
-		
+		int num = list.length;
 		for (String item : list) {
 			File f = new File(Paths.get("storage",item).toString());
 			f.delete();
+		}
+		if (num == 1) {
+			System.out.print("Removed 1 run successfully.\n");
+		}else if (num > 1){
+			System.out.printf("Removed %d runs successfully.\n", num);
 		}
 	}
 	
@@ -135,7 +141,11 @@ public class Serializer {
 			ois.close();
 			
 		}catch(Exception e) {
-			e.printStackTrace();
+			if (e instanceof FileNotFoundException) {
+				s = new Settings(App.defaultUnit, App.defaultTMZ);
+			}else {
+				e.printStackTrace();
+			}
 		}
 		return s;
 	}
